@@ -42,7 +42,7 @@ export default class NurseDataTable extends React.Component {
 
         // pulls updated nurse and schedule information and refreshes data table
         if(this.props.refresh !== prevProps.refresh) {
-          fetch('http://localhost:4000/nurse_data')
+          fetch('https://backend-ccn.herokuapp.com/nurse_data')
             .then(res => res.json())
             .then(data => {
                 this.setState({
@@ -51,7 +51,7 @@ export default class NurseDataTable extends React.Component {
                 this.originalData = data;
             });
 
-        fetch('http://localhost:4000/nurse_sched')
+        fetch('https://backend-ccn.herokuapp.com/nurse_sched')
             .then(res => res.json())
             .then(data2 => {
                 this.setState({
@@ -62,7 +62,7 @@ export default class NurseDataTable extends React.Component {
     }
 
     componentDidMount(){
-        fetch('http://localhost:4000/nurse_data')
+        fetch('https://backend-ccn.herokuapp.com/nurse_data')
         .then(res => res.json())
         .then(data => {
             this.setState({
@@ -71,7 +71,7 @@ export default class NurseDataTable extends React.Component {
             this.originalData = data;
         });
 
-        fetch('http://localhost:4000/nurse_sched')
+        fetch('https://backend-ccn.herokuapp.com/nurse_sched')
         .then(res => res.json())
         .then(data2 => {
             this.setState({
@@ -88,7 +88,7 @@ export default class NurseDataTable extends React.Component {
             deleteInfo.push(this.state.selectedRows[i].nurseID)
         }
 
-        fetch('http://localhost:4000/delete_nurse', {
+        fetch('https://backend-ccn.herokuapp.com/delete_nurse', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

@@ -40,7 +40,7 @@ export default class UpdateNurseForm extends React.Component {
 
   
   handleUpdate(e) {
-    fetch('http://localhost:4000/update_nurse', {
+    fetch('https://backend-ccn.herokuapp.com/update_nurse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

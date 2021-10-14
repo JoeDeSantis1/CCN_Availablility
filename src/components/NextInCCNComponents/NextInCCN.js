@@ -38,13 +38,13 @@ export default class NextInCCN extends React.Component {
     // updates data tables if nurse data changes in the DB
     componentDidUpdate(prevProps) {
       if(this.props.refresh !== prevProps.refresh) {
-        fetch('http://localhost:4000/nurse_sched')
+        fetch('https://backend-ccn.herokuapp.com/nurse_sched')
         .then(res => res.json())
         .then(data => {
             this.filterSchedArray(data);            
         });
 
-        fetch('http://localhost:4000/nurse_data')
+        fetch('https://backend-ccn.herokuapp.com/nurse_data')
         .then(res => res.json())
         .then(data2 => {
             this.setState({
@@ -56,13 +56,13 @@ export default class NextInCCN extends React.Component {
 
     // Pulls nurse data and schedule from DB before page is rendered
     componentDidMount(){
-        fetch('http://localhost:4000/nurse_sched')
+        fetch('https://backend-ccn.herokuapp.com/nurse_sched')
         .then(res => res.json())
         .then(schedData => {
             this.filterSchedArray(schedData);            
         });
 
-        fetch('http://localhost:4000/nurse_data')
+        fetch('https://backend-ccn.herokuapp.com/nurse_data')
         .then(res => res.json())
         .then(nurseData => {
             this.filterNurseArray(nurseData)
@@ -204,7 +204,7 @@ export default class NextInCCN extends React.Component {
         el.hour = this.currentDate.getHours();
         console.log(el);
         alertArray.push(el.firstName);
-        fetch('http://localhost:4000/update_ccnDate', {
+        fetch('https://backend-ccn.herokuapp.com/update_ccnDate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -254,7 +254,7 @@ export default class NextInCCN extends React.Component {
       const nursesToMove = this.state.selectedRows;
 
       nursesToMove.forEach(el => {
-        fetch('http://localhost:4000/move_nurse', {
+        fetch('https://backend-ccn.herokuapp.com/move_nurse', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

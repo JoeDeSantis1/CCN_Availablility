@@ -34,7 +34,7 @@ export default class AddNurseForm extends React.Component {
   handleSubmit(e) {
     const submitInfo = this.state;
 
-    fetch('http://localhost:4000/add_nurse', {
+    fetch('https://backend-ccn.herokuapp.com/add_nurse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
