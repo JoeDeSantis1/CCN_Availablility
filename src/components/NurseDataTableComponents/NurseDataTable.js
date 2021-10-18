@@ -40,9 +40,9 @@ export default class NurseDataTable extends React.Component {
             this.props.updateNurse(row);
         };
 
-        // pulls updated nurse and schedule information and refreshes data table
-        if(this.props.refresh !== prevProps.refresh) {
-          fetch('https://backend-ccn.herokuapp.com/nurse_data')
+      // pulls updated nurse and schedule information and refreshes data table
+      if(this.props.refresh !== prevProps.refresh) {
+        fetch('https://backend-ccn.herokuapp.com/nurse_data')
             .then(res => res.json())
             .then(data => {
                 this.setState({
@@ -58,7 +58,7 @@ export default class NurseDataTable extends React.Component {
                     schInfo: data2
                 });
             });
-        }
+      }
     }
 
     componentDidMount(){

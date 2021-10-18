@@ -36,37 +36,46 @@ export default class NextInCCN extends React.Component {
     }
 
     // updates data tables if nurse data changes in the DB
-    componentDidUpdate(prevProps) {
+    async componentDidUpdate(prevProps) {
       if(this.props.refresh !== prevProps.refresh) {
-        fetch('https://backend-ccn.herokuapp.com/nurse_sched')
-        .then(res => res.json())
-        .then(data => {
-            this.filterSchedArray(data);            
-        });
-
-        fetch('https://backend-ccn.herokuapp.com/nurse_data')
-        .then(res => res.json())
-        .then(data2 => {
-            this.setState({
-                ccnInfo: this.filterNurseArray(data2)
-            });
-        });
+        Promise.all([
+          await fetch('https://backend-ccn.herokuapp.com/nurse_sched')
+          .then(res => res.json())
+          .then(data => {
+              this.filterSchedArray(data);
+              return 'refresh nurse sched all Good'            
+          }),
+          await fetch('https://backend-ccn.herokuapp.com/nurse_data')
+          .then(res => res.json())
+          .then(data2 => {
+              this.setState({
+                  ccnInfo: this.filterNurseArray(data2)
+              });
+              return 'refresh nurse data all Good'
+        })])
+        .then(values => console.log(values));
       };
   }
 
     // Pulls nurse data and schedule from DB before page is rendered
-    componentDidMount(){
-        fetch('https://backend-ccn.herokuapp.com/nurse_sched')
+    async componentDidMount(){
+      Promise.all([
+        await fetch('https://backend-ccn.herokuapp.com/nurse_sched')
         .then(res => res.json())
         .then(schedData => {
-            this.filterSchedArray(schedData);            
-        });
-
-        fetch('https://backend-ccn.herokuapp.com/nurse_data')
+            console.log(schedData);
+            this.filterSchedArray(schedData);
+            return 'nurse sched all Good'          
+        }),
+        await fetch('https://backend-ccn.herokuapp.com/nurse_data')
         .then(res => res.json())
         .then(nurseData => {
+            console.log(nurseData);
             this.filterNurseArray(nurseData)
-        });
+            return 'nurse data all Good'
+        })
+      ])
+      .then(value => console.log(value));
     }
 
     // narrows the DB data down to only the nurses working at the current day and time
@@ -268,7 +277,7 @@ export default class NextInCCN extends React.Component {
         toggleClearRows: !this.state.toggleClearRows
       })
       
-      this.props.refreshTables();
+      window.location.reload();
    
     }
 
@@ -328,33 +337,35 @@ export default class NextInCCN extends React.Component {
 
       return(
         <div>
-          <br />
-          <h2>Next in CCN</h2>
-          <DataTable 
-            columns={columns}
-            data={this.state.ccnInfo}
-            keyField={"nurseID"}
-            selectableRows
-            selectableRowsHighlight
-            clearSelectedRows={this.state.toggleClearRows}
-            onSelectedRowsChange={row => this.handleSelected(row)}
-            striped={true}
-            customStyles={customStyles}
-          />
-          <br />
-          <Button onClick={this.updateCCNdate}>Update CCN Date</Button>{' '}
-          <Button onClick={this.moveNurse}>Move Nurse to Main Unit</Button>
-          <br /><br />
-          <h2>Main Unit Nurses</h2>
-          <DataTable 
-            columns={columns}
-            data={this.state.mainInfo}
-            keyField={"nurseID"}
-            striped={true}
-            customStyles={customStyles}
-            pagination={true}
-            paginationPerPage={5}
-          />
+            <br />
+            <h2>Next in CCN</h2>
+            <DataTable 
+              columns={columns}
+              data={this.state.ccnInfo}
+              keyField='nurseID'
+              selectableRows
+              selectableRowsHighlight
+              clearSelectedRows={this.state.toggleClearRows}
+              onSelectedRowsChange={row => this.handleSelected(row)}
+              noDataComponent='Data is loading, please wait'
+              striped={true}
+              customStyles={customStyles}
+            />
+            <br />
+            <Button onClick={this.updateCCNdate}>Update CCN Date</Button>{' '}
+            <Button onClick={this.moveNurse}>Move Nurse to Main Unit</Button>
+            <br /><br />
+            <h2>Main Unit Nurses</h2>
+            <DataTable 
+              columns={columns}
+              data={this.state.mainInfo}
+              keyField={"nurseID"}
+              striped={true}
+              customStyles={customStyles}
+              noDataComponent='Data is loading, please wait'
+              pagination={true}
+              paginationPerPage={5}
+            />
         </div>
       );
     }
